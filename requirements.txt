@@ -1,0 +1,9 @@
+fastapi
+aiofiles
+jinja2
+requests
+pyyaml
+uvicorn[standard]
+spotipy
+pandas
+matplotlib

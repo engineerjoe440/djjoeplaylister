@@ -11,18 +11,24 @@ playlist.
 ################################################################################
 
 # Requirements
-import os, re
+import os, re, html
 from spotipy import Spotify, oauth2
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
+# Local Dependencies
+from youtube_support import format_youtube_search
+
 ENV_CLIENT_ID = "SPOTIFY_ID"
 ENV_CLIENT_SECRET = "SPOTIFY_SECRET"
 
+TRACKS_PER_PAGE = 20
+
+
 class PlaylistGenerator():
 
-    def __init__(self, url):
+    def __init__(self):
         # Initialize Spotify Client
         self.spotify_client = Spotify(
             client_credentials_manager=oauth2.SpotifyClientCredentials(
@@ -30,8 +36,11 @@ class PlaylistGenerator():
                 client_secret=os.getenv(ENV_CLIENT_SECRET),
             )
         )
-        # Capture Playlist Table as PDF
-        self.gen_path = self.playlist_table(url=url)
+    
+    def _num_pages(self, num_tracks):
+        pages = int(num_tracks / TRACKS_PER_PAGE)
+        pages += (num_tracks % TRACKS_PER_PAGE > 0)
+        return pages
     
     # Function to Extract Playlist URI from URL
     def _gather_playlist_uri(self, playlist_url):
@@ -90,31 +99,96 @@ class PlaylistGenerator():
         # Tracklist has been Built
         return playlist_name, tracklist
     
-    def playlist_table(self, url: str):
+    def playlist_pdf(self, url: str):
         # Capture Tracklist
         playlist, tracks = self._tabulate_tracks(playlist_url=url)
-        # Generate Table
-        fig, ax = plt.subplots()
-        ax.set_title(playlist.title()) # Apply Title
-        fig.patch.set_visible(False) # Hide Axes
-        ax.axis('off')
-        ax.axis('tight')
-        # Generate Table
-        df = pd.DataFrame(tracks, columns=["Title", "Artist(s)", "Explicit"])
-        print(df.values)
-        ax.table(cellText=df.values, colLabels=df.columns)
-        fig.tight_layout()
         # Store Table as PDF
         filename = playlist.replace(' ', '_').encode("ascii", "ignore")
         filename = filename.decode('ascii') + '.pdf'
+        total_pages = self._num_pages(len(tracks))
         with PdfPages(filename) as pp:
-            plt.savefig(pp, format='pdf')
+            page_count = 0
+            while len(tracks) > 0:
+                page_count += 1
+                fig_tracks = []
+                cell_backgrounds = []
+                i = 0
+                while i <= TRACKS_PER_PAGE and len(tracks) > 0:
+                    track = tracks.pop(0)
+                    fig_tracks.append(track[:2])
+                    # Manage Cell Coloring
+                    if track[-1] == 'Yes':
+                        cell_backgrounds.append(['#B86566', '#B86566'])
+                    else:
+                        cell_backgrounds.append(['w', 'w'])
+                    i += 1
+                # Generate Table
+                plt.figure()
+                fig, ax = plt.subplots()
+                fig.patch.set_visible(False) # Hide Axes
+                ax.set_title(
+                    f"{playlist}\n(page {page_count} of {total_pages})"
+                )
+                ax.axis('off')
+                ax.axis('tight')
+                # Generate Table
+                df = pd.DataFrame(fig_tracks, columns=["Title", "Artist(s)"])
+                ax.table(
+                    cellText=df.values,
+                    colLabels=df.columns,
+                    loc="upper center",
+                    cellColours=cell_backgrounds,
+                )
+                fig.set_size_inches([8,10.5])
+                fig.tight_layout(rect=[0.11, 0.3, 0.95, .95])
+                plt.savefig(pp, format='pdf')
         # Return Path to File
         return os.path.join(os.getcwd(), filename)
+    
+    def playlist_html_table(self, url: str, table_id: str = None,
+                            classes: str = None):
+        # Capture Tracklist
+        playlist, tracks = self._tabulate_tracks(playlist_url=url)
+        table_list = [t[:2] for t in tracks]
+        # Generate Table
+        df = pd.DataFrame(table_list, columns=["Title", "Artist(s)"])
+        # Define Formatter
+        def fmtr(text):
+            text = html.escape(text)
+            # Search for Text in Tracklist
+            for i, track in enumerate(tracks):
+                # Apply Hyperlink
+                if text == track[0]:
+                    url = format_youtube_search([text, tracks[i][1]])
+                    text = f"""<a href="{url}">{text}</a>"""
+                # Identify Explicit Tracks
+                if text in track[:2]:
+                    if tracks[i][-1] == 'Yes':
+                        return f"""<div class="explicit">{text}</div>"""
+                    else:
+                        return text
+            return text
+        # Generate the Inner HTML for the Table
+        return """
+        <div>
+            <p><h3>{playlist}</h3></p>
+            {table}
+        </div>
+        """.format(playlist=playlist, table=df.to_html(
+            escape=False,
+            formatters={
+                "Title": fmtr,
+                "Artist(s)": fmtr
+            },
+            table_id=table_id,
+            classes=classes,
+        ))
+
+
 
 
 if __name__ == '__main__':
-    playlister = PlaylistGenerator(
-        "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
-    )
-    path = playlister.gen_path
+    tst_url = "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
+    playlister = PlaylistGenerator()
+    playlister.playlist_pdf(tst_url)
+    print(playlister.playlist_html_table(tst_url))
