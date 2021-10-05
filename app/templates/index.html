@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Overlock&display=swap" rel="stylesheet">
+    <title>DJ Joe | Playlister</title>
+  </head>
+  <body>
+    <div class="pagecore">
+      <h1>Automatic Playlist Parser</h1>
+      <form action="/load_playlist" method="POST">
+        <div class="formcore">
+          <input required type="text" name="playlist" placeholder="Playlist URL..">
+          <button class="button buttonSubmit">Load</button>
+        </div>
+      </form>
+      {{playlist_table}}
+    </div>
+  </body>
+</html>

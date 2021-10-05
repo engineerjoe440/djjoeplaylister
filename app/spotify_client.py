@@ -99,7 +99,8 @@ class PlaylistGenerator():
         # Tracklist has been Built
         return playlist_name, tracklist
     
-    def playlist_pdf(self, url: str):
+    def playlist_basic_pdf(self, url: str):
+        """Generate a Simple PDF of the Tracklist."""
         # Capture Tracklist
         playlist, tracks = self._tabulate_tracks(playlist_url=url)
         # Store Table as PDF
@@ -145,8 +146,21 @@ class PlaylistGenerator():
         # Return Path to File
         return os.path.join(os.getcwd(), filename)
     
+    def playlist_json(self, url: str):
+        """Generate a JSON List of Dictionaries for Each Track."""
+        # Capture Tracklist
+        playlist, tracks = self._tabulate_tracks(playlist_url=url)
+        for i, track in enumerate(tracks):
+            tracks[i] = {
+                "title": track[0],
+                "artist": track[1],
+                "explicit": track[2],
+            }
+        return playlist, tracks
+    
     def playlist_html_table(self, url: str, table_id: str = None,
                             classes: str = None):
+        """Generate an HTML Table from the Playlist's Information."""
         # Capture Tracklist
         playlist, tracks = self._tabulate_tracks(playlist_url=url)
         table_list = [t[:2] for t in tracks]
@@ -190,5 +204,5 @@ class PlaylistGenerator():
 if __name__ == '__main__':
     tst_url = "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
     playlister = PlaylistGenerator()
-    playlister.playlist_pdf(tst_url)
+    playlister.playlist_basic_pdf(tst_url)
     print(playlister.playlist_html_table(tst_url))

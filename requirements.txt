@@ -1,6 +1,7 @@
 fastapi
 aiofiles
 jinja2
+python-multipart
 requests
 pyyaml
 uvicorn[standard]
