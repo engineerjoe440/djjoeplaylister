@@ -3,6 +3,7 @@ aiofiles
 jinja2
 python-multipart
 requests
+beautifulsoup4
 pyyaml
 uvicorn[standard]
 spotipy
