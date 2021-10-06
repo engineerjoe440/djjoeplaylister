@@ -172,20 +172,21 @@ class PlaylistGenerator():
             # Search for Text in Tracklist
             for i, track in enumerate(tracks):
                 # Apply Hyperlink
-                if text == track[0]:
+                if text == html.escape(track[0]):
                     url = format_youtube_search([text, tracks[i][1]])
-                    text = f"""<a href="{url}">{text}</a>"""
+                    text = f"""<a href="{url}" target="_blank"
+                        rel="noopener noreferrer">{text}</a>"""
                 # Identify Explicit Tracks
                 if text in track[:2]:
                     if tracks[i][-1] == 'Yes':
-                        return f"""<div class="explicit">{text}</div>"""
+                        return f"""<div class="explicit">{text} (explicit)</div>"""
                     else:
                         return text
             return text
         # Generate the Inner HTML for the Table
         return """
         <div>
-            <p><h3>{playlist}</h3></p>
+            <p><h2>Playlist: {playlist}</h2></p>
             {table}
         </div>
         """.format(playlist=playlist, table=df.to_html(
@@ -194,6 +195,7 @@ class PlaylistGenerator():
                 "Title": fmtr,
                 "Artist(s)": fmtr
             },
+            index=False,
             table_id=table_id,
             classes=classes,
         ))

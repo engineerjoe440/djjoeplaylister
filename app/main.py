@@ -33,7 +33,7 @@ def page(request: Request, url: str = None):
         client = spotify_client.PlaylistGenerator()
         data = client.playlist_html_table(
             url=url,
-            table_id="",
+            table_id="playlist",
             classes="",
         )
     # Return Template Response Using Data

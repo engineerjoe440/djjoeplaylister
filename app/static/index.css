@@ -24,7 +24,7 @@ h1, h2, h3 {
 .pagecore {
   position: relative;
   left: 5%;
-  width: 46%;
+  width: 55%;
 }
 
 .formcore {
@@ -80,4 +80,52 @@ input[type=text]:focus, input[type=text]:valid {
 .buttonSubmit:hover {
   background-color: rgba(171, 5, 53, 1);
   color: white;
+}
+
+#playlist {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#playlist td, #playlist th {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px;
+  overflow: hidden;
+}
+
+#playlist a {
+  display: block;
+  margin: -10em;
+  padding: 10em;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: none;
+}
+
+#playlist tr:nth-child(odd){
+  background-color: rgba(58, 57, 57, 0.88);
+  color: white;
+}
+#playlist tr:nth-child(odd) a {color: white;}
+
+#playlist tr:nth-child(even){background-color: rgba(180, 114, 133, 0.88);}
+#playlist tr:nth-child(even) a {color: black;}
+
+#playlist tr:hover, #playlist tr:hover a {
+  background-color: rgba(26, 25, 25, 0.88);
+  color: white;
+}
+
+#playlist th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgba(171, 5, 52, 0.719);
+  color: white;
+}
+
+#playlist .explicit {
+  color: rgba(171, 5, 53, 1);
+  font-weight: bolder;
 }
