@@ -11,6 +11,7 @@ playlist.
 ################################################################################
 
 # Requirements
+from urllib.parse import urlparse
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -18,6 +19,8 @@ from fastapi.templating import Jinja2Templates
 
 # Locals
 import spotify_client
+import apple_music_client
+from formatter import playlist_html_table
 
 # Application Base
 app = FastAPI()
@@ -30,9 +33,16 @@ def page(request: Request, url: str = None):
     """Generate the HTML Page Content Using any Provided Playlist URL"""
     data = ""
     if url != None:
-        client = spotify_client.PlaylistGenerator()
-        data = client.playlist_html_table(
-            url=url,
+        # "Switch" On Domain Name
+        domain = urlparse(url).netloc
+        if 'music.apple' in domain:
+            client = apple_music_client.ApplePlaylister(url)
+        elif 'spotify' in domain:
+            client = spotify_client.SpotifyPlaylister(url)
+        playlist, tracks = client()
+        data = playlist_html_table(
+            playlist=playlist,
+            tracks=tracks,
             table_id="playlist",
             classes="",
         )
