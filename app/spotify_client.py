@@ -81,7 +81,7 @@ class SpotifyPlaylister():
                         track_artists += artist['name']
                         cnt += 1
                     # Validate Track Explicit Indicator
-                    track_explicit = 'Yes' if track['explicit'] else '--'
+                    track_explicit = bool(track['explicit'])
                     # Append Track Information to List
                     tracklist.append(
                         [track_name, track_artists, track_explicit]

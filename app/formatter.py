@@ -49,7 +49,7 @@ def playlist_html_table(playlist: str, tracks: str, table_id: str = None,
                     rel="noopener noreferrer">{text}</a>"""
             # Identify Explicit Tracks
             if text in track[:2]:
-                if tracks[i][-1] == 'Yes':
+                if tracks[i][-1]:
                     return f"""<div class="explicit">{text} (explicit)</div>"""
                 else:
                     return text

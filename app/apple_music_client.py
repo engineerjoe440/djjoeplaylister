@@ -107,9 +107,7 @@ class ApplePlaylister():
             attributes = track_data_set['attributes']
             title = attributes['name']
             artist = attributes['artistName']
-            explicit = '--'
-            if attributes.get('contentRating', '') == 'explicit':
-                explicit = 'Yes'
+            explicit = attributes.get('contentRating', '') == 'explicit'
             tracks.append([title, artist, explicit])
         return '', tracks
 
