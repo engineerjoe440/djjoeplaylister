@@ -1,12 +1,12 @@
 ################################################################################
 """
-DJ JOE Website Spotify Playlist File Generator
-----------------------------------------------
+DJ JOE Website Playlist File Generator
+--------------------------------------
 
 (c) 2021 - Stanley Solutions - Joe Stanley
 
-This application serves an interface to allow the recording of a Spotify
-playlist.
+This application serves an interface to allow the recording of Apple Music or
+Spotify playlists.
 """
 ################################################################################
 
