@@ -13,7 +13,7 @@ Spotify playlists.
 # Requirements
 from urllib.parse import urlparse
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -59,6 +59,11 @@ def page(request: Request, url: str = None):
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return page(request=request)
+
+# Redirect for Playlist Endpoint
+@app.get("/load_playlist")
+async def load_playlist_redirect():
+    return RedirectResponse("/")
 
 # Load Playlist
 @app.post("/load_playlist", response_class=HTMLResponse)
