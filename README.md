@@ -51,12 +51,10 @@ thank you!) https://gist.github.com/aleclol/ef9e87d0964f00975f82d5373a814447
 
 ## Deploying
 1. Clone/Pull repo contents down to server
-2. Verify installation of Nginx/Docker
+2. Verify installation of Nginx/Docker/docker-compose
 3. Configure Nginx to route to the container
-4. Build Docker container (from within the repo-directory)
-  * `docker build -t djplaylistapp .`
-5. Configure the required environment variables for Spotipy in a `.env` file:
+4. Configure the required environment variables for Spotipy in a `.env` file:
   * `SPOTIFY_ID=<api-id>`
   * `SPOTIFY_SECRET=<api-key>`
-6. Run Docker container with docker-compose
+5. Run Docker container with docker-compose
   * `docker-compose up -d --build`
