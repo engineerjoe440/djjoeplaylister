@@ -11,6 +11,7 @@ Spotify playlists.
 ################################################################################
 
 # Requirements
+import os
 from urllib.parse import urlparse
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -70,3 +71,11 @@ async def load_playlist_redirect():
 async def load_playlist(request: Request, playlist: str = Form(...)):
     print(playlist)
     return page(request=request, url=playlist)
+
+# Background Photo Endpoint
+@app.get("/background")
+async def background_url():
+    """Redirect Endpoint to Point to the Background Image."""
+    RedirectResponse(url=os.getenv(BACKGROUND_VAR, "/static/stanleysolutions.jpg"))
+
+# END
