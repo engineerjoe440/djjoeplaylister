@@ -25,7 +25,7 @@ def test_client_doesnt_crash():
     """Just make sure the Spotify Client doesn't die."""
     playlister = SpotifyPlaylister(url=(
         "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38"
-        "AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
+        + "AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
     ))
     print(playlister())
 

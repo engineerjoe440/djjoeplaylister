@@ -25,7 +25,7 @@ def test_client_doesnt_crash():
     """Just make sure the Spotify Client doesn't die."""
     playlister = ApplePlaylister(url=(
         "https://music.apple.com/us/playlist/todays-hits/pl.f4d106fed2bd41149aa"
-        "acabb233eb5eb"
+        + "acabb233eb5eb"
     ))
     print(playlister())
 
