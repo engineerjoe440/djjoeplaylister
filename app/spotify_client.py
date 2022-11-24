@@ -14,8 +14,11 @@ playlist.
 import os, re
 from spotipy import Spotify, oauth2
 
-ENV_CLIENT_ID = "SPOTIFY_ID"
-ENV_CLIENT_SECRET = "SPOTIFY_SECRET"
+CLIENT_ID = os.getenv("SPOTIFY_ID", None)
+CLIENT_SECRET = os.getenv("SPOTIFY_SECRET", None)
+
+if CLIENT_ID is None or CLIENT_SECRET is None:
+    raise ValueError("Failed to Load API Credentials.")
 
 TRACKS_PER_PAGE = 20
 
@@ -27,8 +30,8 @@ class SpotifyPlaylister():
         # Initialize Spotify Client
         self.spotify_client = Spotify(
             client_credentials_manager=oauth2.SpotifyClientCredentials(
-                client_id=os.getenv(ENV_CLIENT_ID),
-                client_secret=os.getenv(ENV_CLIENT_SECRET),
+                client_id=CLIENT_ID,
+                client_secret=CLIENT_SECRET,
             )
         )
 
