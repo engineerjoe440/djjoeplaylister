@@ -9,9 +9,17 @@ node ('djjoeappserv') {
     // Build in the DJ Joe Application Server
     checkout scm
 
-    testPython()
+    // Provide Credentials to Support Spotify Client
+    withCredentials([
+            usernamePassword(credentialsId: 'SPOTIFY_ID_AND_KEY',
+            usernameVariable: 'SPOTIFY_ID',
+            passwordVariable: 'SPOTIFY_SECRET')
+        ]) {
 
-    buildContainer()
+        testPython()
+
+        buildContainer()
+    }
 
 }
 

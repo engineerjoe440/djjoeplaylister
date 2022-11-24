@@ -16,6 +16,13 @@ import pandas as pd
 
 YOUTUBE_BASE_URL = "https://www.youtube.com/results?search_query={}"
 
+PLAYLIST_HTML = """
+    <div>
+        <p><h2>Playlist: {playlist}</h2></p>
+        {table}
+    </div>
+"""
+
 def format_youtube_search(terms: list):
     # Generate a search-url for Youtube based on the terms provided.
     query = ' '.join(terms).replace(' ', '%20')
@@ -30,7 +37,7 @@ def playlist_json(tracks):
             "explicit": track[2],
         }
     return tracks
-    
+
 def playlist_html_table(playlist: str, tracks: str, table_id: str = None,
                         classes: str = None):
     """Generate an HTML Table from the Playlist's Information."""
@@ -38,7 +45,7 @@ def playlist_html_table(playlist: str, tracks: str, table_id: str = None,
     # Generate Table
     df = pd.DataFrame(table_list, columns=["Title", "Artist(s)"])
     # Define Formatter
-    def fmtr(text):
+    def formatter(text):
         text = html.escape(text)
         # Search for Text in Tracklist
         for i, track in enumerate(tracks):
@@ -55,18 +62,15 @@ def playlist_html_table(playlist: str, tracks: str, table_id: str = None,
                     return text
         return text
     # Generate the Inner HTML for the Table
-    return """
-    <div>
-        <p><h2>Playlist: {playlist}</h2></p>
-        {table}
-    </div>
-    """.format(playlist=playlist, table=df.to_html(
+    return PLAYLIST_HTML.format(playlist=playlist, table=df.to_html(
         escape=False,
         formatters={
-            "Title": fmtr,
-            "Artist(s)": fmtr
+            "Title": formatter,
+            "Artist(s)": formatter
         },
         index=False,
         table_id=table_id,
         classes=classes,
     ))
+
+# END

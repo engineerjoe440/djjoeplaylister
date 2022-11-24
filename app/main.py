@@ -21,7 +21,11 @@ from fastapi.templating import Jinja2Templates
 # Locals
 import spotify_client
 import apple_music_client
-from formatter import playlist_html_table
+from html_formatter import playlist_html_table
+
+
+BACKGROUND_VAR = "BACKGROUND_URL"
+
 
 # Application Base
 app = FastAPI()
@@ -33,7 +37,7 @@ templates = Jinja2Templates(directory="templates")
 def page(request: Request, url: str = None):
     """Generate the HTML Page Content Using any Provided Playlist URL"""
     data = ""
-    if url != None:
+    if url is not None:
         # "Switch" On Domain Name
         domain = urlparse(url).netloc
         if 'music.apple' in domain:
@@ -59,6 +63,7 @@ def page(request: Request, url: str = None):
 # Main Application Response
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
+    """Base Application Page."""
     return page(request=request)
 
 # Redirect for Playlist Endpoint

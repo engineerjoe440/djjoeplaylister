@@ -111,9 +111,4 @@ class ApplePlaylister():
             tracks.append([title, artist, explicit])
         return '', tracks
 
-
-
-if __name__ == '__main__':
-    tst_url = "https://music.apple.com/us/playlist/todays-hits/pl.f4d106fed2bd41149aaacabb233eb5eb"
-    playlister = ApplePlaylister(url=tst_url)
-    print(playlister())
+# END

@@ -31,15 +31,15 @@ class SpotifyPlaylister():
                 client_secret=os.getenv(ENV_CLIENT_SECRET),
             )
         )
-    
+
     def __call__(self):
         return self._tabulate_tracks()
-    
+
     def _num_pages(self, num_tracks):
         pages = int(num_tracks / TRACKS_PER_PAGE)
         pages += (num_tracks % TRACKS_PER_PAGE > 0)
         return pages
-    
+
     # Function to Extract Playlist URI from URL
     def _gather_playlist_uri(self, playlist_url):
         result = re.search('playlist/(.*)\?', playlist_url)
@@ -98,8 +98,4 @@ class SpotifyPlaylister():
         # Tracklist has been Built
         return playlist_name, tracklist
 
-
-if __name__ == '__main__':
-    tst_url = "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
-    playlister = SpotifyPlaylister(url=tst_url)
-    print(playlister())
+# END
