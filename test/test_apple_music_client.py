@@ -12,6 +12,7 @@ Spotify playlists.
 
 import sys
 from pathlib import Path
+import pytest
 
 BASE = str(Path(__file__).parent.parent / "app")
 
@@ -21,6 +22,7 @@ sys.path.insert(0, BASE)
 from apple_music_client import ApplePlaylister
 
 
+@pytest.mark.skip
 def test_client_doesnt_crash():
     """Just make sure the Spotify Client doesn't die."""
     playlister = ApplePlaylister(url=(

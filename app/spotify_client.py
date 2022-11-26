@@ -23,7 +23,7 @@ if CLIENT_ID is None or CLIENT_SECRET is None:
 TRACKS_PER_PAGE = 20
 
 
-class SpotifyPlaylister():
+class SpotifyPlaylister:
 
     def __init__(self, url: str):
         self.url = url
@@ -45,7 +45,7 @@ class SpotifyPlaylister():
 
     # Function to Extract Playlist URI from URL
     def _gather_playlist_uri(self, playlist_url):
-        result = re.search('playlist/(.*)\?', playlist_url)
+        result = re.search(r'playlist/(.*)\?', playlist_url)
         try:
             playlist_uri = result.group(1)
         except:

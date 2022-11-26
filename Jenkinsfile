@@ -19,6 +19,8 @@ node ('djjoeappserv') {
         testPython()
 
         buildContainer()
+
+        pushContainer()
     }
 
 }
@@ -40,6 +42,14 @@ def testPython() {
 // Build the Application
 def buildContainer() {
     stage("Build Container") {
-        //sh "docker build "
+        sh "docker build -t engineerjoe440/playlist-generator:latest ."
+    }
+}
+
+
+// Push the Application Container to Docker-Hub
+def pushContainer() {
+    stage("Push Container") {
+        sh "docker push engineerjoe440/playlist-generator:latest"
     }
 }

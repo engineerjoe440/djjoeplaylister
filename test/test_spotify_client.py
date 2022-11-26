@@ -24,9 +24,12 @@ from spotify_client import SpotifyPlaylister
 def test_client_doesnt_crash():
     """Just make sure the Spotify Client doesn't die."""
     playlister = SpotifyPlaylister(url=(
-        "https://open.spotify.com/playlist/3UCaLWJ87hkrrK8laug3vD?fbclid=IwAR38"
-        + "AzTjdxuFOaNshQOyg1lh5oZwIDlMEREnATQBAhtYBzbP815XSLC_NC8"
+        "https://open.spotify.com/playlist/3KHb0WRmzbp9WH7E2mXVmx?si=fa8f7abb94d74345"
     ))
     print(playlister())
+
+
+if __name__ == "__main__":
+    test_client_doesnt_crash()
 
 # END

@@ -9,5 +9,6 @@ services:
     ports:
       - 8384:80
     restart: always
-    env_file:
-      - .env
+    environment:
+      - SPOTIFY_ID
+      - SPOTIFY_SECRET
