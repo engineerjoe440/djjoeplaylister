@@ -4,7 +4,7 @@
  * Build, Deploy, and Share the Playlist Generator
  ******************************************************************************/
 
-node ('djjoeappserv') {
+node ('x86-32-build') {
 
     // Build in the DJ Joe Application Server
     checkout scm

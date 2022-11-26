@@ -29,7 +29,4 @@ def test_client_doesnt_crash():
     print(playlister())
 
 
-if __name__ == "__main__":
-    test_client_doesnt_crash()
-
 # END
