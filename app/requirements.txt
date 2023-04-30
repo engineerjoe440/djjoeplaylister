@@ -7,5 +7,4 @@ beautifulsoup4
 pyyaml
 uvicorn[standard]
 spotipy
-pandas
-matplotlib
+tabulate

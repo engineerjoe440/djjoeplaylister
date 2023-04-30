@@ -48,8 +48,6 @@ def page(request: Request, url: str = None):
         data = playlist_html_table(
             playlist=playlist,
             tracks=tracks,
-            table_id="playlist",
-            classes="",
         )
     # Return Template Response Using Data
     return templates.TemplateResponse(

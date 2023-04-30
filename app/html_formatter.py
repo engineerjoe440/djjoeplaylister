@@ -12,7 +12,7 @@ Spotify playlists.
 
 # Requirements
 import html
-import pandas as pd
+from tabulate import tabulate
 
 YOUTUBE_BASE_URL = "https://www.youtube.com/results?search_query={}"
 
@@ -38,39 +38,28 @@ def playlist_json(tracks):
         }
     return tracks
 
-def playlist_html_table(playlist: str, tracks: str, table_id: str = None,
-                        classes: str = None):
+def playlist_html_table(playlist: str, tracks: str):
     """Generate an HTML Table from the Playlist's Information."""
-    table_list = [t[:2] for t in tracks]
+    table_list = []
+    # Search for Text in Tracklist
+    for i, track in enumerate(tracks):
+        # Apply Hyperlink
+        linked_title = f"""<a href="{format_youtube_search(track[:2])}" target="_blank"
+            rel="noopener noreferrer">{track[0]}</a>"""
+        # Identify Explicit Tracks
+        artist_marked_w_explicit = track[1]
+        if track[2]:
+            print(track[2])
+            artist_marked_w_explicit = f"""<div class="explicit">{artist_marked_w_explicit} (explicit)</div>"""
+        table_list.append(
+            [linked_title, artist_marked_w_explicit]
+        )
     # Generate Table
-    df = pd.DataFrame(table_list, columns=["Title", "Artist(s)"])
-    # Define Formatter
-    def formatter(text):
-        text = html.escape(text)
-        # Search for Text in Tracklist
-        for i, track in enumerate(tracks):
-            # Apply Hyperlink
-            if text == html.escape(track[0]):
-                url = format_youtube_search([text, tracks[i][1]])
-                text = f"""<a href="{url}" target="_blank"
-                    rel="noopener noreferrer">{text}</a>"""
-            # Identify Explicit Tracks
-            if text in track[:2]:
-                if tracks[i][-1]:
-                    return f"""<div class="explicit">{text} (explicit)</div>"""
-                else:
-                    return text
-        return text
+    table = tabulate(table_list, headers=["Title", "Artist(s)"], tablefmt="unsafehtml")
     # Generate the Inner HTML for the Table
-    return PLAYLIST_HTML.format(playlist=playlist, table=df.to_html(
-        escape=False,
-        formatters={
-            "Title": formatter,
-            "Artist(s)": formatter
-        },
-        index=False,
-        table_id=table_id,
-        classes=classes,
-    ))
+    return PLAYLIST_HTML.format(
+        playlist=playlist,
+        table=table
+    )
 
 # END
