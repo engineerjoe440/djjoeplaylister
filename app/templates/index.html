@@ -5,7 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="static/favicon.ico">
-    <link rel="stylesheet" href="static/index.css">
+    <style>
+/* DJ Joe Playlister CSS */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+html { 
+    background: url("{{ background_image }}") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+  font-family: 'Jockey One', sans-serif;
+  color:rgba(171, 5, 53, 1);
+  -webkit-text-stroke: 1px black;
+}
+
+.pagecore {
+  position: relative;
+  left: 5%;
+  width: 55%;
+}
+
+.formcore {
+  position: relative;
+  width: 100;
+}
+
+ 
+input[type=text] {
+  width: 170px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid rgba(171, 5, 53, 1);
+  border-radius: 4px;
+  font-size: 14px;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.055);
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 20px;
+  transition: width 0.4s ease-in-out;
+}
+  
+input[type=text]:focus, input[type=text]:valid {
+  width: 85%;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.button {
+    position: absolute;
+    right: 0;
+    background-color: rgba(171, 5, 53, 1);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Overlock', cursive;
+    font-weight: bold;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+
+.buttonSubmit {
+  background-color: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.5); 
+  border: 2px solid rgba(171, 5, 53, 1);
+}
+
+.buttonSubmit:hover {
+  background-color: rgba(171, 5, 53, 1);
+  color: white;
+}
+
+#playlist {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#playlist td, #playlist th {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px;
+  overflow: hidden;
+}
+
+#playlist a {
+  display: block;
+  margin: -10em;
+  padding: 10em;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: none;
+}
+
+#playlist tr:nth-child(odd){
+  background-color: rgba(58, 57, 57, 0.88);
+  color: white;
+}
+#playlist tr:nth-child(odd) a {color: white;}
+
+#playlist tr:nth-child(even){background-color: rgba(180, 114, 133, 0.88);}
+#playlist tr:nth-child(even) a {color: black;}
+
+#playlist tr:hover, #playlist tr:hover a {
+  background-color: rgba(26, 25, 25, 0.88);
+  color: white;
+}
+
+#playlist th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgba(171, 5, 52, 0.719);
+  color: white;
+}
+
+.explicit {
+  color: rgba(171, 5, 53, 1);
+  font-weight: bolder;
+}
+
+.artist {
+  font-weight: bold;
+  color: white;
+}
+
+.tracktitle :link {
+  font-weight: bold;
+  color: #f8b4c6;
+}
+
+.tracktitle :visited {
+  font-weight: bold;
+  color: #9e5468;
+}
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Overlock&display=swap" rel="stylesheet">
     <title>DJ Joe | Playlister</title>
   </head>

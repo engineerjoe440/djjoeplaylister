@@ -55,6 +55,9 @@ def page(request: Request, url: str = None):
         {
             "request": request,
             "playlist_table": data,
+            "background_image": os.getenv(
+                BACKGROUND_VAR, "/static/stanleysolutions.jpg"
+            ),
         },
     )
 
@@ -74,11 +77,5 @@ async def load_playlist_redirect():
 async def load_playlist(request: Request, playlist: str = Form(...)):
     print(playlist)
     return page(request=request, url=playlist)
-
-# Background Photo Endpoint
-@app.get("/background")
-async def background_url():
-    """Redirect Endpoint to Point to the Background Image."""
-    RedirectResponse(url=os.getenv(BACKGROUND_VAR, "/static/stanleysolutions.jpg"))
 
 # END

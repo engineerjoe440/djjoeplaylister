@@ -9,5 +9,7 @@ services:
     ports:
       - 8384:80
     restart: always
+    environment:
+      - BACKGROUND_URL=https://static.wixstatic.com/media/9cb155_0d4be62c27554bbf9178a1c1b3445caf.jpg/v1/fill/w_980,h_591,al_t,q_85,usm_0.66_1.00_0.01/9cb155_0d4be62c27554bbf9178a1c1b3445caf.webp
     env_file:
       - .env
