@@ -12,19 +12,22 @@ Spotify playlists.
 
 # Requirements
 import os
+import logging
 from urllib.parse import urlparse
+
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# Locals
 import spotify_client
 import apple_music_client
 from html_formatter import playlist_html_table
 
 
 BACKGROUND_VAR = "BACKGROUND_URL"
+
+logger = logging.getLogger("uvicorn")
 
 
 # Application Base
@@ -56,7 +59,7 @@ def page(request: Request, url: str = None):
             "request": request,
             "playlist_table": data,
             "background_image": os.getenv(
-                BACKGROUND_VAR, "/static/stanleysolutions.jpg"
+                BACKGROUND_VAR, "/static/stanley-solutions.jpg"
             ),
         },
     )
@@ -70,12 +73,14 @@ async def root(request: Request):
 # Redirect for Playlist Endpoint
 @app.get("/load_playlist")
 async def load_playlist_redirect():
+    """Redirect to the Basic Page."""
     return RedirectResponse("/")
 
 # Load Playlist
 @app.post("/load_playlist", response_class=HTMLResponse)
 async def load_playlist(request: Request, playlist: str = Form(...)):
-    print(playlist)
+    """Get the Playlist Information."""
+    logger.debug(playlist)
     return page(request=request, url=playlist)
 
 # END

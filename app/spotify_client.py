@@ -11,7 +11,9 @@ playlist.
 ################################################################################
 
 # Requirements
-import os, re
+import os
+import re
+import logging
 from spotipy import Spotify, oauth2
 
 CLIENT_ID = os.getenv("SPOTIFY_ID", None)
@@ -22,8 +24,10 @@ if CLIENT_ID is None or CLIENT_SECRET is None:
 
 TRACKS_PER_PAGE = 20
 
+logger = logging.getLogger("uvicorn")
 
 class SpotifyPlaylister:
+    """Collector for Spotify Playlists."""
 
     def __init__(self, url: str):
         self.url = url
@@ -46,11 +50,11 @@ class SpotifyPlaylister:
     # Function to Extract Playlist URI from URL
     def _gather_playlist_uri(self, playlist_url):
         result = re.search(r'playlist/(.*)\?', playlist_url)
-        try:
+        if result:
             playlist_uri = result.group(1)
-        except:
+        else:
             playlist_uri = ''
-        print("URI:", playlist_uri)
+        logger.debug("URI: %s", playlist_uri)
         return playlist_uri
 
     # Function to Store Playlist Information in Text File
@@ -65,7 +69,7 @@ class SpotifyPlaylister:
         playlist_name = results['name']
         tracks = results['tracks']
         # Generate List of Tracks
-        tracklist = []
+        track_list = []
         while True:
             for item in tracks['items']:
                 if 'track' in item:
@@ -86,19 +90,22 @@ class SpotifyPlaylister:
                     # Validate Track Explicit Indicator
                     track_explicit = bool(track['explicit'])
                     # Append Track Information to List
-                    tracklist.append(
+                    track_list.append(
                         [track_name, track_artists, track_explicit]
                     )
                 except KeyError:
-                    print(u'Skipping track {0} by {1} (local only?)'.format(
-                            track['name'], track['artists'][0]['name']))
+                    logger.debug(
+                        'Skipping track %s by %s (local only?)',
+                        track['name'],
+                        track['artists'][0]['name']
+                    )
             # 1 page = 50 results
             # check if there are more pages
             if tracks['next']:
                 tracks = self.spotify_client.next(tracks)
             else:
                 break
-        # Tracklist has been Built
-        return playlist_name, tracklist
+        # Track List has been Built
+        return playlist_name, track_list
 
 # END
