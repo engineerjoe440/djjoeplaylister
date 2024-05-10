@@ -1,5 +1,3 @@
-version: "3.9"
-
 # djjoeplaylister is Defined by Local "Dockerfile", Must Be Rebuilt Each Time
 services:
   djjoeplaylister:
