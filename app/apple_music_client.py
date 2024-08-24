@@ -35,6 +35,8 @@ class ApplePlaylister:
         response = requests.get(self.url, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
 
+        playlist = soup.find('h1', attrs={"data-testid": "non-editable-product-title"})
+
         for meta in soup.find_all('meta', attrs={"property": "music:song"}):
             link = meta.get('content')
             # Load Each Song's Page -- This will take some time -- await?
@@ -47,6 +49,6 @@ class ApplePlaylister:
                 [str(title.text), str(artist.text), bool(explicit)]
             )
 
-        return '', track_list
+        return str(playlist.text), track_list
 
 # END
