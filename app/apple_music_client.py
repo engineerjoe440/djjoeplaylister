@@ -29,95 +29,24 @@ class ApplePlaylister:
     def __call__(self):
         return self._tabulate_tracks()
 
-    def _get_creds(self):
-        response = requests.get(
-            self.url,
-            headers={
-                'Accept': (
-                    'text/html,application/xhtml+xml,application/xml;'
-                    'q=0.9,*/*;q=0.8'
-                ),
-                'Host': 'music.apple.com',
-                'User-Agent': (
-                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
-                    'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 '
-                    'Safari/605.1.15'
-                ),
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-            },
-            timeout=60, # arbitrarily set
-        )
-        html = response.text
-        webpage = BeautifulSoup(html, "html.parser")
-        meta = webpage.find_all(
-            "meta",
-            attrs={"name":"desktop-music-app/config/environment"},
-        )
-        if len(meta) > 0:
-            raw = meta[0].get("content")
-        else:
-            raise ValueError("Failed to Extract Data.")
-        clean = unquote(raw)
-        dictifyed = json.loads(clean)
-        data = dictifyed["MEDIA_API"]["token"]
-        return data
-
-    def _extract_url_data(self):
-        array = self.url.split("/")
-        country = array[3]
-        playlist_id = array[6]
-        return country, playlist_id
-
-    def _get_data(self, country, playlist_id, token):
-        url = APPLE_MUSIC_REQUEST.format(
-            country=country,
-            playlist_id=playlist_id,
-        )
-        response = requests.get(
-            url,
-            headers={
-                'Accept': '*/*',
-                'Origin': 'music.apple.com',
-                'Referer': 'music.apple.com',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Host': 'amp-api.music.apple.com',
-                'User-Agent': (
-                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
-                    'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 '
-                    'Safari/605.1.15'
-                ),
-                'Authorization': f"Bearer {token}",
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'same-site',
-            },
-            params=(
-                ('l', 'en-us'),
-            ),
-        )
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return None
-
     def _tabulate_tracks(self):
-        # Load the Playlist Data
-        creds = self._get_creds()
-        country, playlist_id = self._extract_url_data()
-        jsondata = self._get_data(country, playlist_id, creds)
-        track_data = jsondata['data']
-        # Iteratively Create Track Lists
-        tracks = []
-        for track_data_set in track_data:
-            attributes = track_data_set['attributes']
-            title = attributes['name']
-            artist = attributes['artistName']
-            explicit = attributes.get('contentRating', '') == 'explicit'
-            tracks.append([title, artist, explicit])
-        return '', tracks
+        track_list = []
+        # Load the Playlist Page
+        response = requests.get(self.url, timeout=10)
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        for meta in soup.find_all('meta', attrs={"property": "music:song"}):
+            link = meta.get('content')
+            # Load Each Song's Page -- This will take some time -- await?
+            song_soup = BeautifulSoup(requests.get(link).text, 'html.parser')
+            # Get Specific Data
+            title = song_soup.find('h1', attrs={"data-testid": "song-title"})
+            explicit = title.find('span', attrs={"data-testid": "explicit-badge"})
+            artist = song_soup.find('span', attrs={"data-testid": "song-subtitle-artist-link0"})
+            track_list.append(
+                [str(title.text), str(artist.text), bool(explicit)]
+            )
+
+        return '', track_list
 
 # END

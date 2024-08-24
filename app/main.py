@@ -66,21 +66,8 @@ def page(request: Request, url: str = None):
 
 # Main Application Response
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request, playlist: str | None = None):
     """Base Application Page."""
-    return page(request=request)
-
-# Redirect for Playlist Endpoint
-@app.get("/load_playlist")
-async def load_playlist_redirect():
-    """Redirect to the Basic Page."""
-    return RedirectResponse("/")
-
-# Load Playlist
-@app.post("/load_playlist", response_class=HTMLResponse)
-async def load_playlist(request: Request, playlist: str = Form(...)):
-    """Get the Playlist Information."""
-    logger.debug(playlist)
     return page(request=request, url=playlist)
 
 # END
