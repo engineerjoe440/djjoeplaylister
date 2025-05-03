@@ -71,34 +71,40 @@ class SpotifyPlaylister:
         # Generate List of Tracks
         track_list = []
         while True:
-            for item in tracks['items']:
-                if 'track' in item:
-                    track = item['track']
-                else:
-                    track = item
-                try:
-                    # Gather Pertinent Track Information
-                    track_name = track['name']
-                    track_artists = ""
-                    cnt = 0
-                    # Gather all Track Artists as Comma-Delimited String
-                    for artist in track['artists']:
-                        if cnt != 0:
-                            track_artists += ', '
-                        track_artists += artist['name']
-                        cnt += 1
-                    # Validate Track Explicit Indicator
-                    track_explicit = bool(track['explicit'])
-                    # Append Track Information to List
-                    track_list.append(
-                        [track_name, track_artists, track_explicit]
-                    )
-                except KeyError:
-                    logger.debug(
-                        'Skipping track %s by %s (local only?)',
-                        track['name'],
-                        track['artists'][0]['name']
-                    )
+            try:
+                for item in tracks['items']:
+                    if 'track' in item:
+                        track = item['track']
+                    else:
+                        track = item
+                    try:
+                        # Gather Pertinent Track Information
+                        track_name = track['name']
+                        track_artists = ""
+                        cnt = 0
+                        # Gather all Track Artists as Comma-Delimited String
+                        for artist in track['artists']:
+                            if cnt != 0:
+                                track_artists += ', '
+                            track_artists += artist['name']
+                            cnt += 1
+                        # Validate Track Explicit Indicator
+                        track_explicit = bool(track['explicit'])
+                        # Append Track Information to List
+                        track_list.append(
+                            [track_name, track_artists, track_explicit]
+                        )
+                    except KeyError:
+                        logger.debug(
+                            'Skipping track %s by %s (local only?)',
+                            track['name'],
+                            track['artists'][0]['name']
+                        )
+            except KeyError as err:
+                logger.exception(
+                    "Couldn't find 'items' keys: %s", tracks.keys(),
+                    exc_info=err,
+                )
             # 1 page = 50 results
             # check if there are more pages
             if tracks['next']:
